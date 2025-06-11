@@ -22,7 +22,7 @@ class ChessBoard {
     }
     let boardEnd = this.horizontal - 1; //initialize a variable to hold the board limit to not surpass and give to the checkMove fn
     this.squareArr.forEach((element) => {
-      checkMovements(element.coordinates, boardEnd);
+      checkMovements(element, boardEnd);
     });
     function checkMovements(currentSquare) {
       let all8PossibleMovments = [
@@ -36,26 +36,31 @@ class ChessBoard {
         [-1, -2],
       ];
       all8PossibleMovments.forEach((movement) => {
-        let horizontalTotal = currentSquare[0] + movement[0];
-        let verticalTotal = currentSquare[1] + movement[1];
+        let horizontalTotal = currentSquare.coordinates[0] + movement[0];
+        let verticalTotal = currentSquare.coordinates[1] + movement[1];
         let destCoordinates = [horizontalTotal, verticalTotal];
-        console.log(
-          `Start square : ${currentSquare} -> ${movement} = ${destCoordinates}`,
-        );
+        /*console.log(
+          `Start square : ${currentSquare.coordinates} -> ${movement} = ${destCoordinates}`,
+        );*/
         if (
           horizontalTotal <= boardEnd &&
           verticalTotal <= boardEnd &&
           horizontalTotal >= 0 &&
           verticalTotal >= 0
         ) {
-          console.log(
+          /*console.log(
             `the destination: ${destCoordinates} is not out of bound !`,
-          );
+          );*/
+          //currentSquare.canMoveTo.push(destCoordinates);
+          createEdge(currentSquare, destCoordinates);
         }
-        //console.log(`the destination ${destCoordinates} is out of bound !`);
       });
-      //check with all 8 possible movement
-      //if movement is possible add the destination to canMoveTo array
+    }
+    function createEdge(currentSquare, destCoordinates) {
+      console.log(`${currentSquare.coordinates}-----${destCoordinates}`);
+      board.squareArr.forEach((element) => {
+        console.log(element);
+      });
     }
   }
   knightMove(startingPt, destination) {
