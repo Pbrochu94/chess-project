@@ -1,18 +1,7 @@
 class Square {
-  constructor(vertical, horizontal) {
-    this.horizontal = horizontal;
-    this.vertical = vertical;
+  constructor(coordinates) {
+    this.coordinates = coordinates;
     this.canMoveTo = [];
-    this.allMovePoss = [
-      [-1, -2],
-      [-2, -1],
-      [-2, 1],
-      [-1, 2],
-      [1, 2],
-      [2, 1],
-      [2, -1],
-      [1, -2],
-    ];
   }
 }
 
@@ -27,32 +16,46 @@ class ChessBoard {
     //Create each square object
     for (let horizontal = 0; horizontal < this.horizontal; horizontal++) {
       for (let vertical = 0; vertical < this.vertical; vertical++) {
-        let newSquare = new Square(vertical, horizontal);
+        let newSquare = new Square([horizontal, vertical]);
         this.squareArr.push(newSquare);
       }
     }
+    let boardEnd = this.horizontal - 1; //initialize a variable to hold the board limit to not surpass and give to the checkMove fn
     this.squareArr.forEach((element) => {
-      this.availableMove(element);
+      checkMovements(element.coordinates, boardEnd);
     });
-  }
-  availableMove(currentPosition) {
-    let boardEdge = this.horizontal - 1; //declare the board size limit to pass to the canMove fn
-    currentPosition.allMovePoss.forEach((movement) => {
-      if (canMove(currentPosition, movement, boardEdge)) {
-        currentPosition.canMoveTo.push(movement);
-      }
-    });
-    function canMove(currentPosition, movementDigit, boardEdge) {
-      if (
-        //if the knight next square is off the board
-        currentPosition.vertical + movementDigit[0] > boardEdge ||
-        currentPosition.vertical + movementDigit[0] < 0 ||
-        currentPosition.horizontal + movementDigit[1] > boardEdge ||
-        currentPosition.horizontal + movementDigit[1] < 0
-      ) {
-        return false;
-      }
-      return true;
+    function checkMovements(currentSquare) {
+      let all8PossibleMovments = [
+        [-2, -1],
+        [-2, 1],
+        [-1, 2],
+        [1, 2],
+        [2, 1],
+        [2, -1],
+        [1, -2],
+        [-1, -2],
+      ];
+      all8PossibleMovments.forEach((movement) => {
+        let horizontalTotal = currentSquare[0] + movement[0];
+        let verticalTotal = currentSquare[1] + movement[1];
+        let destCoordinates = [horizontalTotal, verticalTotal];
+        console.log(
+          `Start square : ${currentSquare} -> ${movement} = ${destCoordinates}`,
+        );
+        if (
+          horizontalTotal <= boardEnd &&
+          verticalTotal <= boardEnd &&
+          horizontalTotal >= 0 &&
+          verticalTotal >= 0
+        ) {
+          console.log(
+            `the destination: ${destCoordinates} is not out of bound !`,
+          );
+        }
+        //console.log(`the destination ${destCoordinates} is out of bound !`);
+      });
+      //check with all 8 possible movement
+      //if movement is possible add the destination to canMoveTo array
     }
   }
   knightMove(startingPt, destination) {
