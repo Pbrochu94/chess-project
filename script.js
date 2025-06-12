@@ -33,31 +33,24 @@ class ChessBoard {
         [-1, -2],
       ];
       all8PossibleMovements.forEach((movement) => {
+        //check for each movement if the current square can move to it
         let horizontalTotal = currentSquare.coordinates[0] + movement[0];
         let verticalTotal = currentSquare.coordinates[1] + movement[1];
         let destCoordinates = [horizontalTotal, verticalTotal];
-        /*console.log(
-          `Start square : ${currentSquare.coordinates} -> ${movement} = ${destCoordinates}`,
-        );*/
         if (
           horizontalTotal <= boardEnd &&
           verticalTotal <= boardEnd &&
           horizontalTotal >= 0 &&
           verticalTotal >= 0
         ) {
-          /*console.log(
-            `the destination: ${destCoordinates} is not out of bound !`,
-          );*/
-          //currentSquare.canMoveTo.push(destCoordinates);
           let createEdge = (currentSquare, destCoordinates) => {
-            //console.log(`${currentSquare.coordinates}-----${destCoordinates}`);
+            //need to compare the destination coordinates with every square to find the square and link it
             this.squareArr.forEach((element) => {
               if (
                 JSON.stringify(destCoordinates) ==
                 JSON.stringify(element.coordinates)
               ) {
                 currentSquare.canMoveTo.push(element);
-                //need to compare the destination coordinates with every square to find the square and link it
               }
             });
           };
@@ -66,18 +59,33 @@ class ChessBoard {
       });
     };
     this.squareArr.forEach((element) => {
+      //first function to be called
       checkMovements(element, boardEnd, this.squareArr);
     });
   }
   knightMove(startingPt, destination) {
-    //console.log(startingPt)
-    //startingpt ==
-    //if knight position is destination
-    //return square path array
-    //for each possibility in movementPoss array
-    //knightMove(element)
+    let IsStartSqrValid = (sqrToCheck) => {
+      //store the function in a value to access this in function scope
+      let coordinatesJSON = JSON.stringify(sqrToCheck);
+      let squareFound = false;
+      this.squareArr.forEach((element) => {
+        let currSqrCoordJSON = JSON.stringify(element.coordinates);
+        if (coordinatesJSON !== currSqrCoordJSON) {
+          squareFound = true;
+          console.log(`There is no ${coordinatesJSON} square in on this board`);
+          return;
+        }
+        console.log(
+          `The square ${coordinatesJSON} has been found ! ${JSON.stringify(element.coordinates)}`,
+        );
+      });
+    };
+
+    IsStartSqrValid(startingPt);
+    IsStartSqrValid(destination);
   }
 }
 
 let board = new ChessBoard(3);
+board.knightMove([2, 1], [0, 1]);
 console.log(board);
