@@ -21,11 +21,8 @@ class ChessBoard {
       }
     }
     let boardEnd = this.horizontal - 1; //initialize a variable to hold the board limit to not surpass and give to the checkMove fn
-    this.squareArr.forEach((element) => {
-      checkMovements(element, boardEnd);
-    });
-    function checkMovements(currentSquare) {
-      let all8PossibleMovments = [
+    let checkMovements = (currentSquare) => {
+      let all8PossibleMovements = [
         [-2, -1],
         [-2, 1],
         [-1, 2],
@@ -35,7 +32,7 @@ class ChessBoard {
         [1, -2],
         [-1, -2],
       ];
-      all8PossibleMovments.forEach((movement) => {
+      all8PossibleMovements.forEach((movement) => {
         let horizontalTotal = currentSquare.coordinates[0] + movement[0];
         let verticalTotal = currentSquare.coordinates[1] + movement[1];
         let destCoordinates = [horizontalTotal, verticalTotal];
@@ -52,16 +49,25 @@ class ChessBoard {
             `the destination: ${destCoordinates} is not out of bound !`,
           );*/
           //currentSquare.canMoveTo.push(destCoordinates);
+          let createEdge = (currentSquare, destCoordinates) => {
+            //console.log(`${currentSquare.coordinates}-----${destCoordinates}`);
+            this.squareArr.forEach((element) => {
+              if (
+                JSON.stringify(destCoordinates) ==
+                JSON.stringify(element.coordinates)
+              ) {
+                currentSquare.canMoveTo.push(element);
+                //need to compare the destination coordinates with every square to find the square and link it
+              }
+            });
+          };
           createEdge(currentSquare, destCoordinates);
         }
       });
-    }
-    function createEdge(currentSquare, destCoordinates) {
-      console.log(`${currentSquare.coordinates}-----${destCoordinates}`);
-      board.squareArr.forEach((element) => {
-        console.log(element);
-      });
-    }
+    };
+    this.squareArr.forEach((element) => {
+      checkMovements(element, boardEnd, this.squareArr);
+    });
   }
   knightMove(startingPt, destination) {
     //console.log(startingPt)
