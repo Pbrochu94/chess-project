@@ -64,28 +64,52 @@ class ChessBoard {
     });
   }
   knightMove(startingPt, destination) {
-    let IsStartSqrValid = (sqrToCheck) => {
+    let findCoordMatchingSqr = (coordinates) => {
+      let matchingSqr = null;
+      this.squareArr.forEach((square) => {
+        if (JSON.stringify(coordinates) == JSON.stringify(square.coordinates)) {
+          matchingSqr = square;
+          return;
+        }
+      });
+      return matchingSqr;
+    };
+    let IsCoordValid = (sqrToCheck) => {
       //store the function in a value to access this in function scope
       let coordinatesJSON = JSON.stringify(sqrToCheck);
       let squareFound = false;
       this.squareArr.forEach((element) => {
+        if (squareFound) {
+          return squareFound;
+        }
         let currSqrCoordJSON = JSON.stringify(element.coordinates);
-        if (coordinatesJSON !== currSqrCoordJSON) {
+        if (coordinatesJSON == currSqrCoordJSON) {
           squareFound = true;
-          console.log(`There is no ${coordinatesJSON} square in on this board`);
           return;
         }
-        console.log(
-          `The square ${coordinatesJSON} has been found ! ${JSON.stringify(element.coordinates)}`,
-        );
+      });
+      return squareFound;
+    };
+    let move = (currentSqr, nextSqr) => {
+      currentSqr.canMoveTo.forEach((element) => {
+        if (element === nextSqr) {
+          console.log(
+            `can move from ${currSqrObj.coordinates} to ${nextSqr.coordinates}`,
+          );
+        }
       });
     };
+    if (!IsCoordValid(startingPt) || !IsCoordValid(destination)) {
+      throw new Error("Invalid coordinates");
+    }
 
-    IsStartSqrValid(startingPt);
-    IsStartSqrValid(destination);
+    let currSqrObj = findCoordMatchingSqr(startingPt);
+    let nextSqrObj = findCoordMatchingSqr(destination);
+    move(currSqrObj, nextSqrObj);
   }
 }
 
 let board = new ChessBoard(3);
-board.knightMove([2, 1], [0, 1]);
+board.knightMove([0, 0], [1, 2]);
+board.knightMove([1, 2], [2, 0]);
 console.log(board);
